@@ -81,4 +81,62 @@ paths:
 
                   
         
-    
+  /customers/{name}:
+    get:
+      summary: get a single customers
+      description: return list of all customers only via pagination
+      parameters:
+       - name: name
+         in: path
+         description: name of the customer
+         type: string
+         required: true
+         default: mateen
+      responses:
+        200:
+          description: list of customers
+          schema:
+              required:
+                - number
+                - firstName
+                - lastName
+                - birthdate
+                - country
+                - countryCode
+                - mobileNumber
+                - email
+                - customerStatus
+                - address
+              properties:
+                number:
+                  type: number
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                birthdate:
+                  type: string
+                country:
+                  type: string
+                countryCode:
+                  type: string
+                mobileNumber:
+                  type: string
+                email:
+                  type: string
+                customerStatus:
+                  type: string
+                address:
+                  type: object
+                  required:
+                    - addressLine1
+                    - postalCode
+                  properties:
+                    addressLine1:
+                      type: string
+                    addressLine2:
+                      type: string
+                    street:
+                      type: string
+                    postalCode:
+                      type: integer
