@@ -15,6 +15,19 @@ paths:
     get:
       summary: get list of all customers
       description: return list of all customers only via pagination
+      parameters:
+       - name: pageNumber
+         in: query
+         description: Current Page number
+         type: integer
+         required: true
+         default: 1
+       - name: pageSize
+         in: query
+         description: Number of customers returned
+         type: integer
+         required: true
+         default : 10
       responses:
         200:
           description: list of customers
