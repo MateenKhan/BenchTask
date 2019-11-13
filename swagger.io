@@ -52,7 +52,20 @@ paths:
                 customerStatus:
                   type: string
                 address:
-                  type: string
+                  type: object
+                  required:
+                    - addressLine1
+                    - postalCode
+                  properties:
+                    addressLine1:
+                      type: string
+                    addressLine2:
+                      type: string
+                    street:
+                      type: string
+                    postalCode:
+                      type: integer
+
                   
         
     
