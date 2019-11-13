@@ -10,4 +10,49 @@ schemes:
 host: localhost
 basePath: /api
 
-paths: {}
+paths: 
+  /customers:
+    get:
+      summary: get list of all customers
+      description: return list of all customers only via pagination
+      responses:
+        200:
+          description: list of customers
+          schema:
+            type: array
+            items:
+              required:
+                - number
+                - firstName
+                - lastName
+                - birthdate
+                - country
+                - countryCode
+                - mobileNumber
+                - email
+                - customerStatus
+                - address
+              properties:
+                number:
+                  type: number
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                birthdate:
+                  type: string
+                country:
+                  type: string
+                countryCode:
+                  type: string
+                mobileNumber:
+                  type: string
+                email:
+                  type: string
+                customerStatus:
+                  type: string
+                address:
+                  type: string
+                  
+        
+    
