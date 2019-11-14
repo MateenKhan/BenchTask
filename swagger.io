@@ -32,31 +32,20 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  pageNumber:
-                    type: integer
-                  pageSize:
-                    type: integer
-                  total:
-                    type: integer
-                  data: 
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Customer'
+                $ref: '#/components/schemas/PaginatedCustomer'
                     
-  /customers/{name}:
+  /customers/{number}:
     get:
       summary: get a single customers
       description: return list of all customers only via pagination
       parameters:
         - in: path
-          name: name
+          name: number
           schema:
-            type: string
-            default: mateen
+            type: integer
+            default: 1
           required: true
-          description: name of the customer
+          description: id of the customer
       responses:
         '200':
           description: get single customer
@@ -68,6 +57,36 @@ paths:
 
 components:
   schemas:
+    PaginatedCustomer:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+            
+  
+    Address: 
+      type: object
+      required:
+        - addressLine1
+        - postalCode
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        street:
+          type: string
+        postalCode:
+          type: integer
+    
     Customer:
       type: object
       required:
@@ -101,16 +120,5 @@ components:
         customerStatus:
           type: string
         address:
-          type: object
-          required:
-            - addressLine1
-            - postalCode
-          properties:
-            addressLine1:
-              type: string
-            addressLine2:
-              type: string
-            street:
-              type: string
-            postalCode:
-              type: integer
+          $ref: '#/components/schemas/Address'
+          
