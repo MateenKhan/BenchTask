@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  title: Kakfa consumer
+  description: Messages are consumed from kafka and stored in mysql datatbase
+  version: 0.0.1
+servers:
+  - url: http://localhost:8081
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /customers:
+    get:
+      summary: get list of all customers
+      description: return list of all customers only via pagination
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+          required: true
+          description: Current Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          required: true
+          description: Current Page size
+        - in: header
+          name: ActivityID
+          schema:
+            type: string
+            default: a1
+          required: true
+        - in: header
+          name: ApplicationID
+          schema:
+            type: string
+            default: a2
+          required: true
+      responses:
+        '200':    # status code
+          description: list of customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCustomer'
+
+  /customers/{number}:
+    get:
+      summary: get a single customers
+      description: return list of all customers only via pagination
+      parameters:
+        - in: path
+          name: number
+          schema:
+            type: string
+            default: 1a1b
+          required: true
+          description: id of the customer
+        - in: header
+          name: ActivityID
+          schema:
+            type: string
+            default: a1
+          required: true
+        - in: header
+          name: ApplicationID
+          schema:
+            type: string
+            default: a2
+          required: true
+      responses:
+        '200':
+          description: get single customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+
+security:
+  - ApiKeyAuth: []
+  - OAuth2:
+      - read
+      - write
+      - admin
+      
+components:
+  securitySchemes:
+   OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8080/oauth/authorize
+          tokenUrl: http://localhost:8080/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
+  schemas:
+    PaginatedCustomer:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+            
+  
+    Address: 
+      type: object
+      required:
+        - addressLine1
+        - postalCode
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        street:
+          type: string
+        postalCode:
+          type: integer
+          
+    CustomerStatus:
+      type: string
+      enum:
+        - R
+        - S
+        - O
+        - C
+      description: Stored in DB as ::R - Restored, S - Suspended, O - Open, C - Closed
+    
+    Customer:
+      type: object
+      required:
+        - number
+        - firstName
+        - lastName
+        - birthdate
+        - country
+        - countryCode
+        - mobileNumber
+        - email
+        - customerStatus
+        - address
+      properties:
+        number:
+          type: string
+          minimum: 5
+          maximum: 50
+        firstName:
+          type: string
+          minimum: 10
+          maximum: 50
+        lastName:
+          type: string
+          minimum: 10
+          maximum: 50
+        birthdate:
+          type: string
+          format: date
+          pattern: "DD-MM-YYYY"
+        country:
+          type: string
+          maximum: 50
+        countryCode:
+          type: string
+          maximum: 2
+        mobileNumber:
+          type: string
+          maximum: 10
+        email:
+          type: string
+          format: email
+        customerStatus:
+          $ref: '#/components/schemas/CustomerStatus'
+        address:
+          $ref: '#/components/schemas/Address'
+          
